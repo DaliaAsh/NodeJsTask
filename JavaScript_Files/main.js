@@ -1,6 +1,4 @@
 const Users = require("./Users");
-const fs = require("fs");
-let file_name = "Sub_Users.json";
 const array_of_Users1 = [
   {
     id: "1",
@@ -47,11 +45,6 @@ const array_of_Users2 = [
 ];
 Users.readCSV();
 Users.readPlain();
-fs.writeFile("../JSON_Files/" + file_name, "", function (err) {
-  if (err) {
-    throw err;
-  }
-});
-Users.saveToFile(array_of_Users1, file_name);
-Users.saveToFile(array_of_Users2, file_name);
-Users.readJsonFile("All_Users.json");
+Users.saveToFile(array_of_Users1, "Sub_Users.json");
+Users.saveToFile(array_of_Users2, "Sub_Users.json");
+Users.readJsonFile("Sub_Users.json");

@@ -18,7 +18,6 @@ exports.readPlain = function () {
       throw err;
     }
     let lines = data.toString().split("\n");
-    let numOfLines = lines.length;
     let key_line = lines[0];
     let keys = key_line.split(",");
     let Array_Of_Objects = [];
@@ -48,11 +47,48 @@ exports.readPlain = function () {
     );
   });
 };
-exports.saveToFile = function (arr, file_name) {};
+exports.saveToFile = function (arr, file_name) {
+  let myArray = [...arr];
+  let obj = {};
+  fs.readFile("../JSON_Files/" + file_name, function (err, data) {
+    if (err) {
+      for (let i = 0; i < myArray.length; i++) {
+        obj[myArray[i].id] = myArray[i];
+      }
+      fs.writeFile("../JSON_Files/" + file_name, JSON.stringify(obj), function (
+        err
+      ) {
+        if (err) {
+          throw err;
+        }
+      });
+    } else {
+      if (data) {
+        let data_ = JSON.parse(data);
+        let keys = Object.keys(data_);
+        for (let k = 1; k <= keys.length; k++) {
+          obj[data_[k].id] = data_[k];
+        }
+      }
+
+      for (let i = 0; i < myArray.length; i++) {
+        obj[myArray[i].id] = myArray[i];
+      }
+      fs.writeFile("../JSON_Files/" + file_name, JSON.stringify(obj), function (
+        err
+      ) {
+        if (err) {
+          throw err;
+        }
+      });
+    }
+  });
+};
 exports.readJsonFile = function (file_name) {
   fs.readFile("../JSON_Files/" + file_name, function (err, data) {
-    if (data.length !== 0) {
-      console.log(JSON.parse(data));
+    if (err) {
+      throw err;
     }
+    console.table(JSON.parse(data));
   });
 };
