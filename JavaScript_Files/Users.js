@@ -12,7 +12,7 @@ exports.readCSV = function () {
   });
 };
 
-exports.readPlain = function () {
+function readPlain() {
   fs.readFile("../Input_Files/input.txt", function (err, data) {
     if (err) {
       throw err;
@@ -45,50 +45,34 @@ exports.readPlain = function () {
         }
       }
     );
+    resolve("resolved");
   });
-};
+}
 exports.saveToFile = function (arr, file_name) {
-  let myArray = [...arr];
-  let obj = {};
-  fs.readFile("../JSON_Files/" + file_name, function (err, data) {
-    if (err) {
-      for (let i = 0; i < myArray.length; i++) {
-        obj[myArray[i].id] = myArray[i];
-      }
-      fs.writeFile("../JSON_Files/" + file_name, JSON.stringify(obj), function (
-        err
-      ) {
-        if (err) {
-          throw err;
-        }
-      });
-    } else {
-      if (data) {
-        let data_ = JSON.parse(data);
-        let keys = Object.keys(data_);
-        for (let k = 1; k <= keys.length; k++) {
-          obj[data_[k].id] = data_[k];
-        }
+  return new Promise((resolve, reject) => {
+    let obj = {};
+    for (let item of arr) {
+      obj[item.id] = item;
+    }
+
+    fs.writeFile("../JSON_Files/" + file_name, JSON.stringify(obj), function (
+      err
+    ) {
+      if (err) {
+        throw err;
       }
 
-      for (let i = 0; i < myArray.length; i++) {
-        obj[myArray[i].id] = myArray[i];
-      }
-      fs.writeFile("../JSON_Files/" + file_name, JSON.stringify(obj), function (
-        err
-      ) {
-        if (err) {
-          throw err;
-        }
-      });
-    }
+      resolve("go read");
+    });
+  }).then(() => {
+    readJsonFile(file_name);
   });
 };
-exports.readJsonFile = function (file_name) {
+function readJsonFile(file_name) {
   fs.readFile("../JSON_Files/" + file_name, function (err, data) {
     if (err) {
       throw err;
     }
     console.table(JSON.parse(data));
   });
-};
+}
